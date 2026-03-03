@@ -28,19 +28,15 @@ export function formatItem(item: GitHubItem, lang: "zh" | "en" = "zh"): string {
   const labelStr = labels ? ` [${labels}]` : "";
   const body = (item.body ?? "").replace(/\n/g, " ").trim().slice(0, 300);
   const ellipsis = (item.body ?? "").length > 300 ? "..." : "";
-  if (lang === "en") {
-    return [
-      `#${item.number} [${item.state.toUpperCase()}]${labelStr} ${item.title}`,
-      `  Author: @${item.user.login} | Created: ${item.created_at.slice(0, 10)} | Updated: ${item.updated_at.slice(0, 10)} | Comments: ${item.comments} | \u{1F44D}: ${item.reactions?.["+1"] ?? 0}`,
-      `  URL: ${item.html_url}`,
-      `  Summary: ${body}${ellipsis}`,
-    ].join("\n");
-  }
+  const t =
+    lang === "en"
+      ? { author: "Author", created: "Created", updated: "Updated", comments: "Comments", url: "URL", summary: "Summary" }
+      : { author: "作者", created: "创建", updated: "更新", comments: "评论", url: "链接", summary: "摘要" };
   return [
     `#${item.number} [${item.state.toUpperCase()}]${labelStr} ${item.title}`,
-    `  作者: @${item.user.login} | 创建: ${item.created_at.slice(0, 10)} | 更新: ${item.updated_at.slice(0, 10)} | 评论: ${item.comments} | 👍: ${item.reactions?.["+1"] ?? 0}`,
-    `  链接: ${item.html_url}`,
-    `  摘要: ${body}${ellipsis}`,
+    `  ${t.author}: @${item.user.login} | ${t.created}: ${item.created_at.slice(0, 10)} | ${t.updated}: ${item.updated_at.slice(0, 10)} | ${t.comments}: ${item.comments} | 👍: ${item.reactions?.["+1"] ?? 0}`,
+    `  ${t.url}: ${item.html_url}`,
+    `  ${t.summary}: ${body}${ellipsis}`,
   ].join("\n");
 }
 
